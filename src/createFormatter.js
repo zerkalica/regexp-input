@@ -79,7 +79,7 @@ class Formatter {
 
             if (isChanged) {
                 if (isAddedValue) {
-                    if (matchedChar) {
+                    if (matchedChar && !this._isInsert) {
                         oldValuePos++
                     }
                     addValuePos++
