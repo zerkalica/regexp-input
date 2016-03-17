@@ -22,5 +22,5 @@ esproposal.class_instance_fields=enable
 suppress_comment= \\(.\\|\n\\)*\\$FlowDisable
 module.name_mapper='.*\(\.css\)' -> 'empty/object'
 module.name_mapper='.*\(\.configloaderrc\)' -> 'empty/object'
-module.name_mapper='^reactive-di/i/\(.*\)' -> '<PROJECT_ROOT>/i/\1'
-module.name_mapper='^reactive-di/\(.*\)' -> '<PROJECT_ROOT>/src/\1'
+module.name_mapper='^regexp-input/i/\(.*\)' -> '<PROJECT_ROOT>/i/\1'
+module.name_mapper='^regexp-input/\(.*\)' -> '<PROJECT_ROOT>/src/\1'
