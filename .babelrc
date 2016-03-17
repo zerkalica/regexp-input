@@ -1,0 +1,16 @@
+{
+    "presets": ["es2015", "stage-0", "es2015-loose"],
+    "plugins": [
+        ["babel-plugin-module-alias", [
+            {
+                "src": "./src",
+                "expose": "regexp-input"
+            }
+        ]],
+        "syntax-flow",
+        "espower",
+        "flow-comments",
+        "transform-flow-strip-types",
+        "transform-runtime"
+    ]
+}
