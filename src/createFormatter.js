@@ -142,7 +142,7 @@ class MaskCharsBuilder {
 /* eslint-disable quote-props */
 const defaultBuilderMap: MaskCharsBuilderMap = {
     '1': ['\\d', 'regexp'],
-    '-': ['\\-|\\s', 'separator']
+    '-': ['\\-', 'separator']
 };
 /* eslint-enable */
 
