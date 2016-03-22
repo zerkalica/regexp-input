@@ -22,27 +22,23 @@ export type ValueState = {
 
 export default function rootTraverse(node: RegType, acc: ValueState): void {
     // console.log(`begin ${node.type}, ${node.raw}, acc: ${JSON.stringify(acc, 0, '  ')}`)
-
-    const currentMatch = (acc.current && node.mask)
-        ? acc.current.match(node.mask)
-        : null;
+    let currentMatch: ?Array<string> = null;
+    let isStrict: boolean = true;
+    if (acc.current) {
+        const sum: string = acc.current + acc.input;
+        currentMatch = sum.match(node.strictMask)
+        if (!currentMatch) {
+            isStrict = false
+            currentMatch = acc.current.match(node.mask);
+        }
+    }
 
     if (currentMatch) {
         // console.log(`matched ${node.raw} with ${currentMatch[0]}`)
-        const sum = acc.current + acc.input
-        const strictMatch = sum.match(node.strictMask)
-        acc.current = acc.current.substring(strictMatch
-            ? strictMatch[0].length
-            : currentMatch[0].length
-        )
-        // console.log(`match ${sum} to ${node.raw} with ${currentMatch} and ${strictMatch}, current: ${acc.current}`)
-        if (strictMatch) {
+        acc.current = acc.current.substring(currentMatch[0].length)
+        if (isStrict) {
             acc.output += acc.input
             acc.stop = true
-            return
-        }
-        if (node.type === 'value') {
-            return
         }
     } else if (node.body) {
         const body = node.body
@@ -54,19 +50,30 @@ export default function rootTraverse(node: RegType, acc: ValueState): void {
         }
     }
 
-    if (!acc.current && !node.body) {
-        if (node.type === 'value') {
-            acc.output += node.raw
-        } else if (node.mask) {
+    if (acc.stop || acc.current) {
+        return
+    }
+
+    switch (node.type) {
+        case 'value':
+            if (!currentMatch) {
+                acc.output += node.raw
+            }
+            break
+        case 'characterClassRange':
+        case 'dot':
+        case 'characterClassEscape':
+        case 'anchor': {
             const inputMatch = acc.input.match(node.mask)
             if (inputMatch) {
                 acc.output += inputMatch[0]
-                acc.stop = true
-            } else {
-                acc.stop = true
             }
+            acc.stop = true
+            break
         }
-        return
+
+        default:
+            break
     }
 
     // console.log(`end ${node.type}, ${node.raw}, acc: ${JSON.stringify(acc, 0, '  ')}`)
