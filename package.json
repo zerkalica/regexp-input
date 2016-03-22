@@ -63,5 +63,8 @@
     "mocha": "^2.4.5",
     "power-assert": "^1.2.0",
     "sinon": "^1.17.3"
+  },
+  "dependencies": {
+    "regjsparser": "^0.1.5"
   }
 }
