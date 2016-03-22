@@ -1,4 +1,4 @@
 /* @flow */
-import RegExpInput from './RegExpInput'
+import createRegExpFormatter from './createRegExpFormatter'
 
-export default RegExpInput
+export default createRegExpFormatter

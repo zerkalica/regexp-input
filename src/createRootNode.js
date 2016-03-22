@@ -9,7 +9,8 @@ function normalize(item: RegType, acc: Object): void {
     if (item.type === 'reference') {
         throw new Error(`Can't support reference type: ${item.raw}`)
     }
-    item.mask = new RegExp(item.raw)
+    item.mask = new RegExp('^' + item.raw)
+    item.strictMask = new RegExp('^' + item.raw + '$')
     switch (item.type) {
         case 'disjunction':
         case 'alternative':

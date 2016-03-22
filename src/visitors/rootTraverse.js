@@ -23,10 +23,24 @@ export type ValueState = {
 export default function rootTraverse(node: RegType, acc: ValueState): void {
     // console.log(`begin ${node.type}, ${node.raw}, acc: ${JSON.stringify(acc, 0, '  ')}`)
 
-    const currentMatch = (acc.current && node.mask) ? acc.current.match(node.mask) : null
+    const currentMatch = (acc.current && node.mask)
+        ? acc.current.match(node.mask)
+        : null;
+
     if (currentMatch) {
         // console.log(`matched ${node.raw} with ${currentMatch[0]}`)
-        acc.current = acc.current.substring(currentMatch[0].length)
+        const sum = acc.current + acc.input
+        const strictMatch = sum.match(node.strictMask)
+        acc.current = acc.current.substring(strictMatch
+            ? strictMatch[0].length
+            : currentMatch[0].length
+        )
+        // console.log(`match ${sum} to ${node.raw} with ${currentMatch} and ${strictMatch}, current: ${acc.current}`)
+        if (strictMatch) {
+            acc.output += acc.input
+            acc.stop = true
+            return
+        }
         if (node.type === 'value') {
             return
         }
