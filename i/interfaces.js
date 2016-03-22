@@ -18,3 +18,5 @@ export type FormatterResult = {
 
 
 export type Format = (oldValue: string, addValue: string, oldCursorPos: number) => FormatterResult;
+
+export type Formatter = (current: string, input: string) => string;
