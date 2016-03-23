@@ -24,9 +24,9 @@ function declareTests(
 
 describe('createRegExpFormatterBase', () => {
     declareTests('[0-9]{2}-[a-z]', [
-        {current: '12-a', input: 'a', output: ''}
+        {current: '12-a', input: 'b', output: ''}
     ])
-/*
+
     declareTests('[0-9]{1,2}(,\\d{1,2})?', [
         {current: '', input: 'a', output: ''},
         {current: '', input: '-', output: ''},
@@ -53,6 +53,7 @@ describe('createRegExpFormatterBase', () => {
         {current: '12,34', input: 'a', output: ''},
         {current: '12,34', input: '4', output: ''}
     ])
+
     declareTests('[0-9]{2}-[a-z]', [
         {current: '', input: 'a', output: ''},
         {current: '', input: '-', output: ''},
@@ -138,5 +139,5 @@ describe('createRegExpFormatterBase', () => {
         {current: '123--45-6', input: '6', output: ''},
         {current: '123--45-6', input: '7', output: ''}
     ])
-*/
+/**/
 })

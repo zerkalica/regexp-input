@@ -21,25 +21,24 @@ export type ValueState = {
 // {current: '11-', input: '1', output: '-1'}
 
 export default function rootTraverse(node: RegType, acc: ValueState): void {
-    console.log(`begin ${node.type}, ${node.raw}, acc: ${JSON.stringify(acc, 0, '  ')}`)
-    let currentMatch: ?Array<string> = null;
-    let isStrict: boolean = true;
+    // console.log(`begin ${node.type}, ${node.raw}, acc: ${JSON.stringify(acc, 0, '  ')}`)
+    let normalMatch: ?Array<string> = null;
+    let strictMatch: ?Array<string> = null;
     if (acc.current && node.type !== 'alternative') {
         const sum: string = acc.current + acc.input;
-        currentMatch = sum.match(node.strictMask)
-        if (!currentMatch) {
-            isStrict = false
-            currentMatch = acc.current.match(node.mask);
+        strictMatch = sum.match(node.strictMask)
+        if (!strictMatch) {
+            normalMatch = acc.current.match(node.mask);
         }
     }
 
-    if (currentMatch) {
-        console.log(`matched ${node.raw} with ${currentMatch[0]}`)
-        acc.current = acc.current.substring(currentMatch[0].length)
-        if (isStrict) {
-            acc.output += acc.input
-            acc.stop = true
-        }
+    if (strictMatch) {
+        // console.log(`strict matched ${node.raw} with ${strictMatch[0]}`)
+        acc.output += acc.input
+        acc.stop = true
+    } else if (normalMatch) {
+        // console.log(`matched ${node.raw} with ${normalMatch[0]}`)
+        acc.current = acc.current.substring(normalMatch[0].length)
     } else {
         switch (node.type) {
             case 'value':
@@ -70,7 +69,8 @@ export default function rootTraverse(node: RegType, acc: ValueState): void {
             case 'characterClassEscape':
             case 'anchor': {
                 const inputMatch = acc.input.match(node.mask)
-                if (inputMatch) {
+                // console.log(`inputMatch: ${inputMatch ? inputMatch[0] : null}`)
+                if (inputMatch && !normalMatch) {
                     acc.output += inputMatch[0]
                 }
                 acc.stop = true
@@ -81,6 +81,5 @@ export default function rootTraverse(node: RegType, acc: ValueState): void {
                 break
         }
     }
-
-    console.log(`end ${node.type}, ${node.raw}, acc: ${JSON.stringify(acc, 0, '  ')}`)
+    // console.log(`end ${node.type}, ${node.raw}, acc: ${JSON.stringify(acc, 0, '  ')}`)
 }
