@@ -21,10 +21,10 @@ export type ValueState = {
 // {current: '11-', input: '1', output: '-1'}
 
 export default function rootTraverse(node: RegType, acc: ValueState): void {
-    // console.log(`begin ${node.type}, ${node.raw}, acc: ${JSON.stringify(acc, 0, '  ')}`)
+    console.log(`begin ${node.type}, ${node.raw}, acc: ${JSON.stringify(acc, 0, '  ')}`)
     let currentMatch: ?Array<string> = null;
     let isStrict: boolean = true;
-    if (acc.current) {
+    if (acc.current && node.type !== 'alternative') {
         const sum: string = acc.current + acc.input;
         currentMatch = sum.match(node.strictMask)
         if (!currentMatch) {
@@ -34,47 +34,53 @@ export default function rootTraverse(node: RegType, acc: ValueState): void {
     }
 
     if (currentMatch) {
-        // console.log(`matched ${node.raw} with ${currentMatch[0]}`)
+        console.log(`matched ${node.raw} with ${currentMatch[0]}`)
         acc.current = acc.current.substring(currentMatch[0].length)
         if (isStrict) {
             acc.output += acc.input
             acc.stop = true
         }
-    } else if (node.body) {
-        const body = node.body
-        for (let i = 0, l = body.length; i < l; i++) {
-            rootTraverse(body[i], acc)
-            if (acc.stop) {
+    } else {
+        switch (node.type) {
+            case 'value':
+                acc.output += node.raw
+                break
+            case 'disjunction':
+            case 'group':
+            case 'alternative':
+            case 'quantifier': {
+                const body = node.body
+                for (let i = 0, l = body.length; i < l; i++) {
+                    rootTraverse(body[i], acc)
+                    if (acc.stop) {
+                        break
+                    }
+                }
                 break
             }
+            default:
+                break
         }
     }
 
-    if (acc.stop || acc.current) {
-        return
-    }
+    if (!acc.stop && !acc.current) {
+        switch (node.type) {
+            case 'characterClass':
+            case 'dot':
+            case 'characterClassEscape':
+            case 'anchor': {
+                const inputMatch = acc.input.match(node.mask)
+                if (inputMatch) {
+                    acc.output += inputMatch[0]
+                }
+                acc.stop = true
+                break
+            }
 
-    switch (node.type) {
-        case 'value':
-            if (!currentMatch) {
-                acc.output += node.raw
-            }
-            break
-        case 'characterClassRange':
-        case 'dot':
-        case 'characterClassEscape':
-        case 'anchor': {
-            const inputMatch = acc.input.match(node.mask)
-            if (inputMatch) {
-                acc.output += inputMatch[0]
-            }
-            acc.stop = true
-            break
+            default:
+                break
         }
-
-        default:
-            break
     }
 
-    // console.log(`end ${node.type}, ${node.raw}, acc: ${JSON.stringify(acc, 0, '  ')}`)
+    console.log(`end ${node.type}, ${node.raw}, acc: ${JSON.stringify(acc, 0, '  ')}`)
 }
