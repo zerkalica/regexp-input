@@ -106,6 +106,13 @@ export type CharacterClassRange = {
     max: number;
 }
 
+export type Traversable =
+    | Disjunction
+    | Group
+    | Alternative
+    | Quantifier
+    | CharacterClass;
+
 export type RegType =
     Anchor
     | Value
