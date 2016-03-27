@@ -1,9 +1,9 @@
 /* @flow */
 /* eslint-env mocha */
 
-import createRegExpFormatter from 'regexp-input/createRegExpFormatter'
+import createRootNode from 'regexp-input/createRootNode'
+import Traverser from 'regexp-input/Traverser'
 import assert from 'power-assert'
-import type {Formatter} from 'regexp-input/i/interfaces'
 
 function declareTests(
     regExp: string,
@@ -13,8 +13,9 @@ function declareTests(
         allTests.forEach((test) => {
             it(`with input '${test.current}' + '${test.input}' should produce '${test.output}'`,
             () => {
-                const formatter: Formatter = createRegExpFormatter(regExp);
-                const result: string = formatter(test.current, test.input);
+                const node = createRootNode(regExp)
+                const traverser = new Traverser(test.current, test.input)
+                const result: string = traverser.traverse(node);
                 // console.log(`result='${result}'`)
                 assert(result === test.output)
             })
@@ -22,11 +23,7 @@ function declareTests(
     })
 }
 
-describe('createRegExpFormatterBase', () => {
-    declareTests('[0-9]{2}-[a-z]', [
-        {current: '12-a', input: 'b', output: ''}
-    ])
-
+describe('TraverserTest', () => {
     declareTests('[0-9]{1,2}(,\\d{1,2})?', [
         {current: '', input: 'a', output: ''},
         {current: '', input: '-', output: ''},
