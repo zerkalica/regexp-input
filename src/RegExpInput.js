@@ -2,9 +2,14 @@
 import Traverser from 'regexp-input/Traverser'
 import createRootNode from 'regexp-input/createRootNode'
 import type {
+    MaskedInput // eslint-disable-line
+} from 'regexp-input/i/interfaces'
+
+import type {
     RegType
 } from 'regexp-input/i/parserInterfaces'
 
+// implements MaskedInput
 export default class RegExpInput {
     _node: RegType;
 
@@ -29,10 +34,11 @@ export default class RegExpInput {
 
     _format(current: string, input: string): string {
         const traverser = new Traverser(current, input)
+
         return traverser.traverse(this._node)
     }
 
-    delete(count: number = 1): void {
+    delete(count: number = 1): boolean {
         const prevCursor = this.cursor
         const current = this.value
 
@@ -43,10 +49,13 @@ export default class RegExpInput {
         for (let i = prevCursor + count; i < current.length; i++) {
             value += this._format(value, current[i]);
         }
+        const isChanged: boolean = this.value !== value;
         this.value = value
+
+        return isChanged
     }
 
-    breakSpace(count: number = 1): void {
+    bs(count: number = 1): boolean {
         const prevCursor = this.cursor
         const current = this.value
         let value: string = '';
@@ -61,11 +70,14 @@ export default class RegExpInput {
             value += this._format(value, current[i]);
         }
 
+        const isChanged: boolean = this.value !== value;
         this.value = value
         this.cursor = Math.min(cursor, value.length)
+
+        return isChanged
     }
 
-    paste(input: string, isInsert: boolean = false): void {
+    paste(input: string, isInsert: boolean = false): ?string {
         const prevCursor = this.cursor
         const current = this.value
         let cursorDelta: number = 0;
@@ -78,9 +90,11 @@ export default class RegExpInput {
             }
         }
 
+        let pasteValue: string = '';
         for (let i = 0; i < input.length; i++) {
             const addStr: string = this._format(value, input[i]);
             value += addStr
+            pasteValue += addStr
             cursorDelta = cursorDelta + addStr.length
         }
 
@@ -89,7 +103,10 @@ export default class RegExpInput {
             value += this._format(value, current[i])
         }
 
+        const isChanged: boolean = this.value !== value;
         this.value = value
         this.cursor = Math.min(cursor, value.length)
+
+        return isChanged ? pasteValue : null
     }
 }

@@ -1,4 +1,4 @@
 /* @flow */
-import createRegExpFormatter from './createRegExpFormatter'
+import createEventFilterCreator from './createEventFilterCreator'
 
-export default createRegExpFormatter
+export {createEventFilterCreator}

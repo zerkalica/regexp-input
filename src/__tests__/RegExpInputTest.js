@@ -22,7 +22,8 @@ function declareTests(
         allTests.forEach((test) => {
             it(`${test.method}${test.input
                 ? ` '${test.input}'`
-                : ''} in '${test.value}' at ${test.cursor} should produce '${test.newValue}' at ${test.newCursor}`,
+                : ''} in '${test.value}' at ${test.cursor} should produce '${
+                    test.newValue}' at ${test.newCursor}`,
             () => {
                 ri.value = test.value
                 ri.cursor = test.cursor
@@ -43,7 +44,7 @@ function declareTests(
                         if (!test.count) {
                             throw new Error('No bs count provided')
                         }
-                        ri.breakSpace(test.count)
+                        ri.bs(test.count)
                         break
                     default:
                         break
@@ -102,6 +103,6 @@ describe('RegExpInputTest', () => {
         {method: 'paste', value: '12--3', cursor: 4, input: '4', newValue: '12--4', newCursor: 5},
         {method: 'paste', value: '12--3', cursor: 5, input: 'a', newValue: '12--3', newCursor: 5},
         {method: 'paste', value: '12--3', cursor: 5, input: '-', newValue: '12--3', newCursor: 5},
-        {method: 'paste', value: '12--3', cursor: 5, input: '5', newValue: '12--3', newCursor: 5},
+        {method: 'paste', value: '12--3', cursor: 5, input: '5', newValue: '12--3', newCursor: 5}
     ])
 })
