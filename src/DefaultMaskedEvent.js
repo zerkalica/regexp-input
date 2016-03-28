@@ -15,14 +15,12 @@ function createAnimationFrame(window: ?Object): (fn: Function) => void {
 
 export default class DefaultMaskedEvent {
     _event: Event;
-    _document: Document;
     _window: Object;
     _animationFrame: (fn: Function) => void;
 
     constructor(event: Event, window: Object) {
         this._event = event
         this._window = window
-        this._document = window.document
         this._animationFrame = createAnimationFrame(window)
     }
 

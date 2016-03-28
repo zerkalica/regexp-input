@@ -68,14 +68,14 @@ describe('RegExpInputTest', () => {
         {method: 'paste', value: '1', cursor: 1, input: 'a', newValue: '1--', newCursor: 3},
         {method: 'paste', value: '1', cursor: 1, input: '-', newValue: '1--', newCursor: 3},
         {method: 'paste', value: '1', cursor: 1, input: '2', newValue: '12', newCursor: 2},
-
+        /* eslint-disable max-len */
         {method: 'paste', value: '1', cursor: 0, input: 'a', newValue: '1', newCursor: 0, isInsert: true},
         {method: 'paste', value: '1', cursor: 0, input: '-', newValue: '1', newCursor: 0, isInsert: true},
         {method: 'paste', value: '1', cursor: 0, input: '2', newValue: '21', newCursor: 1, isInsert: true},
         {method: 'paste', value: '1', cursor: 1, input: 'a', newValue: '1--', newCursor: 3, isInsert: true},
         {method: 'paste', value: '1', cursor: 1, input: '-', newValue: '1--', newCursor: 3, isInsert: true},
         {method: 'paste', value: '1', cursor: 1, input: '2', newValue: '12', newCursor: 2, isInsert: true},
-
+        /* eslint-enable */
         {method: 'paste', value: '12', cursor: 0, input: 'a', newValue: '12', newCursor: 0},
         {method: 'paste', value: '12', cursor: 0, input: '-', newValue: '12', newCursor: 0},
         {method: 'paste', value: '12', cursor: 0, input: '3', newValue: '32', newCursor: 1},
