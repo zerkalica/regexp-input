@@ -21,6 +21,12 @@ export default class Traverser {
     ) {
         this._stop = false
         this._output = ''
+        if (current === undefined) {
+            throw new Error('current is undefined')
+        }
+        if (input === undefined) {
+            throw new Error('input is undefined')
+        }
         this._input = input
         this._current = current
     }
@@ -44,11 +50,11 @@ export default class Traverser {
 
     _baseReduce(match: Match): boolean {
         if (match.strictMatch) {
-            // console.log(`strict matched ${node.raw} with ${strictMatch[0]}`)
+            console.log(`strictMatch: ${match.strictMatch[0]}`)
             this._output += this._input
             this._stop = true
         } else if (match.normalMatch) {
-            // console.log(`matched ${node.raw} with ${normalMatch[0]}`)
+            console.log(`normalMatch: ${match.normalMatch[0]}`)
             this._current = this._current.substring(match.normalMatch[0].length)
         } else {
             return false
@@ -60,7 +66,7 @@ export default class Traverser {
     _valueReduce(match: Match, node: RegType): void {
         if (!this._stop && !this._current) {
             const inputMatch = this._input.match(node.mask)
-            // console.log(`inputMatch: ${inputMatch ? inputMatch[0] : null}`)
+            console.log(`inputMatch: ${inputMatch ? inputMatch[0] : null}`)
             if (inputMatch && !match.normalMatch) {
                 this._output += inputMatch[0]
             }
@@ -80,6 +86,7 @@ export default class Traverser {
 
     traverse(node: RegType): string {
         let match: Match;
+        console.log(`begin ${node.type}, ${node.raw}, cur:${this._current}, out: ${this._output}, stop: ${this._stop}`)
         switch (node.type) {
             case 'value':
                 match = this._getMatches(node)
@@ -110,6 +117,7 @@ export default class Traverser {
             default:
                 break
         }
+        console.log(`end ${node.type}, ${node.raw}, cur: ${this._current}, out: ${this._output}, stop: ${this._stop}`)
 
         return this._output
     }

@@ -1,17 +1,20 @@
 /* @flow */
 import type {
     CreateEvent,
+    EventFilter, // eslint-disable-line
     MaskedEvent,
     MaskedInput
 } from 'regexp-input/i/interfaces'
 
-export default class EventFilter {
+// implements EventFilter
+export default class DefaultEventFilter {
     _createEvent: CreateEvent;
     _input: MaskedInput;
     _onChange: (val: string) => void;
 
     onKeypress: (e: KeyboardEvent) => void;
     onPaste: (e: Event) => void;
+    onChange: (e: Event) => void;
     onKeyDown: (e: KeyboardEvent) => void;
 
     constructor(
@@ -24,11 +27,15 @@ export default class EventFilter {
         this._onChange = onChange
         this.onKeypress = this._onKeypress.bind(this)
         this.onPaste = this._onPaste.bind(this)
+        this.onChange = this._onChangeEvent.bind(this)
         this.onKeyDown = this._onKeyDown.bind(this)
     }
 
     _pasteValue(event: MaskedEvent, val: string, isPaste: boolean = false): void {
         const {_input: input} = this
+        if (val === undefined) {
+            throw new Error('val is undefined')
+        }
         event.preventDefault()
         input.cursor = event.getCursor()
         const pasteValue: ?string = input.paste(val);
@@ -71,5 +78,10 @@ export default class EventFilter {
     _onPaste(e: Event): void {
         const event: MaskedEvent = this._createEvent(e);
         this._pasteValue(event, event.getClipboardData(), true)
+    }
+
+    _onChangeEvent(e: Event): void {
+        const event: MaskedEvent = this._createEvent(e);
+        event.preventDefault()
     }
 }

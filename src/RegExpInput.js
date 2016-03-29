@@ -35,6 +35,10 @@ export default class RegExpInput {
     _format(current: string, input: string): string {
         const traverser = new Traverser(current, input)
 
+        console.log((new Traverser('', '1')).traverse(this._node))
+        console.log((new Traverser('1', '2')).traverse(this._node))
+        console.log((new Traverser('12', '3')).traverse(this._node))
+
         return traverser.traverse(this._node)
     }
 
@@ -82,6 +86,9 @@ export default class RegExpInput {
         const current = this.value
         let cursorDelta: number = 0;
         let value: string = '';
+        if (current.length < prevCursor) {
+            throw new Error(`current string '${current}' length (${current.length}) < prevCursor (${prevCursor})`)
+        }
         for (let i = 0; i < prevCursor; i++) {
             const addStr: string = this._format(value, current[i]);
             value += addStr

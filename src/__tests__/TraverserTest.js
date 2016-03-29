@@ -24,6 +24,15 @@ function declareTests(
 }
 
 describe('TraverserTest', () => {
+    declareTests('\\d{4}-\\d{4}-\\d{4}-\\d{4,7}', [
+        {current: '', input: '1', output: '1'},
+        {current: '1', input: 'a', output: ''},
+        {current: '1', input: '-', output: ''},
+        {current: '12', input: '1', output: '1'},
+        {current: '12', input: '3', output: '3'},
+        {current: '123', input: '4', output: '4'}
+    ])
+
     declareTests('[0-9]{1,2}(,\\d{1,2})?', [
         {current: '', input: 'a', output: ''},
         {current: '', input: '-', output: ''},
